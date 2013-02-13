@@ -119,14 +119,16 @@ def handle_server_input(msg)	#handle any inputs from the server
 	when /^:(.+?)!(.+?)@(.+?)\sINVITE\s(.+)\s([#&][^\x07\x2C\s]{0,200})$/i
 		puts("-->Invite to #{$5} from #{$1}")
 		do_invite("#{$5}")
+
+		########need to find a way to condense these###########
 	when /^.*END OF MESSAGE\(S\) OF THE DAY -.*/ #works on gsurge, allows for easy joining of a channel on startup
         puts "-->Ready to join<--"
-        S.puts "JOIN #{Initial_channel}"
+        S.puts "JOIN \##{ARGV[3]}"
 	when /^:(.+?)\s*\s(.+?)\s:End of MOTD command/ #works on editmyconfigsbitch
         puts "-->Ready to join<--"
-        S.puts "JOIN \##{Initial_channel}"
+        S.puts "JOIN \##{ARGV[3]}"
 	else
-		#puts (msg)				#uncomment this to see the output that isn't parsing useful if a command isn't working
+		#puts (msg)				#uncomment this to see the output that isn't parsing, useful if a command isn't working
 	end
 end
 
@@ -141,8 +143,6 @@ else
 	irc_server = ARGV[0]
 	irc_port = ARGV[1]
 	nick = ARGV[2]
-	Initial_channel = ARGV[3]
-	puts ("#{Initial_channel}")
 	S = TCPSocket.open(irc_server, irc_port)
 	printf("Addr: %s\n", S.addr.join(":"))			#print out the address and peer from the TCP Connection
 	printf("Peer: %s\n", S.peeraddr.join(":"))
