@@ -23,7 +23,7 @@ require "socket"
 
 #parses the serverfile and grabs the hostname and port associatd with the servername
 def parse_server_infos(q3_server)
-	File.open(".\\servers.list").each do |line|
+	File.open("servers.list").each do |line|
 	
 	case line
 	
@@ -47,7 +47,7 @@ def get_players(q3_server, irc_channel)
 	sock = UDPSocket.new()
 
 	if (infos[0] == -1 || infos[1] == -1)
-		S.puts("PRIVMSG #{irc_channel} : Error obtaining server info")
+			S.puts("PRIVMSG #{irc_channel} : Error obtaining server info")
 	else
 		sock.connect(infos[0], infos[1])
 		sock.printf("\xFF\xFF\xFF\xFFgetstatus", 0)		#send getstatus string to server
@@ -73,7 +73,7 @@ end
 #parse the server file and output the contents
 def get_servers(irc_channel)
 	serverLine = ""
-	File.open(".\\servers.list").each do |line|
+	File.open("servers.list").each do |line|
 		case line
 	
 		when /^#/
