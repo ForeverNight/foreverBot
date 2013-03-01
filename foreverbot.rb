@@ -29,6 +29,8 @@ def parse_server_infos(q3_server)
 	
 		when /^#/
 			#do nothing
+		when /^\n/
+			#do nothing
 		else
 			hostInfo = line.split(" ")
 			if (hostInfo[0] == q3_server)
@@ -45,7 +47,7 @@ def get_players(q3_server, irc_channel)
 	sock = UDPSocket.new()
 
 	if (infos[0] == -1 || infos[1] == -1)
-		S.puts("PRIVMSG #{channel} : Error obtaining server info")
+		S.puts("PRIVMSG #{irc_channel} : Error obtaining server info")
 	else
 		sock.connect(infos[0], infos[1])
 		sock.printf("\xFF\xFF\xFF\xFFgetstatus", 0)		#send getstatus string to server
@@ -76,6 +78,8 @@ def get_servers(irc_channel)
 	
 		when /^#/
 			#do nothing, # = comment character at beginning of line
+		when /^\n/
+			#do nothing, new line at the beginning means whitespace
 		else
 			split = line.split(" ")
 			serverLine << split[0]
@@ -126,7 +130,7 @@ def handle_server_input(msg)	#handle any inputs from the server
         S.puts "JOIN \##{ARGV[3]}"
 	when /^:(.+?)\s*\s(.+?)\s:End of MOTD command/ #works on editmyconfigsbitch
         puts "-->Ready to join<--"
-        S.puts "JOIN \##{ARGV[3]}"
+        S.puts "JOIN \#{ARGV[3]}"
 	else
 		#puts (msg)				#uncomment this to see the output that isn't parsing, useful if a command isn't working
 	end
@@ -136,8 +140,8 @@ end
 # main entry point of the program
 #
 
-if (ARGV.length != 4)
-	printf("USAGE: .\\bot2.rb <irc server> <irc port> <nick> <channel>\n")	#deomonstrate the proper usage of the bot to the user
+if (ARGV.length != 4)	#figure out a better way of doing this
+	printf("USAGE: .\\foreverbot.rb <irc server> <irc port> <nick> <channel>\n")	#deomonstrate the proper usage of the bot to the user
 else
 	#take input from the command line arguments and set server port nick channel
 	irc_server = ARGV[0]
